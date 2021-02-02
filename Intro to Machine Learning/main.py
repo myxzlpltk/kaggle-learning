@@ -1,4 +1,5 @@
 from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 import pandas as pd
 
@@ -16,17 +17,18 @@ features = ['LotArea', 'YearBuilt', '1stFlrSF', '2ndFlrSF', 'FullBath', 'Bedroom
 # Create a new Data Frame based on features
 X = home_data[features]
 
-# Create model based on features
-iowa_model = DecisionTreeRegressor(random_state=5)
+# Split data
+train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=1)
 
-# Fit the model
-# X = Prediction features
-# y = prediction result [SalePrice]
-iowa_model.fit(X, y)
+# Create a model
+iowa_model = DecisionTreeRegressor(random_state=1)
 
-# Predict X itself
-predictions = iowa_model.predict(X)
+# Fit the data
+iowa_model.fit(train_X, train_y)
 
-# Get absolute errors between datasets and predictions
-# error = actual − predicted
-error = mean_absolute_error(y, predictions)
+# Predict
+val_predictions = iowa_model.predict(val_X)
+
+print(val_predictions[:5])
+print(val_y.head().tolist())
+print(mean_absolute_error(val_predictions, val_y))
